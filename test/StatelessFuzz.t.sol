@@ -1,21 +1,17 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.20;
 
-import {Fuzz} from "../src/Fuzz.sol";
-import {Test} from "forge-std/Test.sol";
-import {console} from "forge-std/console.sol";
+import {StatelessFuzzCatches} from "../src/statelessFuzzCatches.sol";
+import {Test} from "lib/forge-std/src/Test.sol";
 
-contract TestFuzz is Test {
-    Fuzz fuzz = new Fuzz();
+contract StatelessFuzzCatchesTest is Test {
+    StatelessFuzzCatches sfc;
 
-    function testFuzzNoRandom() public  {
-        fuzz.f(10);
-        assertEq(fuzz.alwaysZero() , 0);
+    function setUp() public {
+        sfc = new StatelessFuzzCatches();
     }
 
-    // stateless fuzzing
-    function testFuzzWithRandom(uint input_) public {
-        fuzz.f(input_);
-        assert(fuzz.alwaysZero() == 0);
+    function test_doMath(uint128 randomNumber) public view {
+        assert(sfc.doMath(randomNumber) != 0);
     }
 }
